@@ -64,10 +64,10 @@
     <Analyzer Include="/Applications/Unity/Hub/Editor/2022.3.9f1/Unity.app/Contents/Tools/Unity.SourceGenerators/Unity.Properties.SourceGenerator.dll" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Library/PackageCache/com.unity.inputsystem@1.7.0/Tests/TestFixture/InputTestFixture.cs" />
     <Compile Include="Library/PackageCache/com.unity.inputsystem@1.7.0/Tests/TestFixture/WinUserInput.cs" />
     <Compile Include="Library/PackageCache/com.unity.inputsystem@1.7.0/Tests/TestFixture/AssemblyInfo.cs" />
     <Compile Include="Library/PackageCache/com.unity.inputsystem@1.7.0/Tests/TestFixture/InputTestRuntime.cs" />
+    <Compile Include="Library/PackageCache/com.unity.inputsystem@1.7.0/Tests/TestFixture/InputTestFixture.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Library/PackageCache/com.unity.inputsystem@1.7.0/Tests/TestFixture/Unity.InputSystem.TestFramework.asmdef" />

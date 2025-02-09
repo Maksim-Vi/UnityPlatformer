@@ -53,7 +53,7 @@ namespace Platformer
             return null;
         }
 
-        public void AddTransition(IState to, IState from, IPredicate condition)
+        public void AddTransition(IState from, IState to, IPredicate condition)
         {
             GetOrAddNode(from).AddTransition(GetOrAddNode(to)._state, condition);
         }

@@ -65,8 +65,8 @@ namespace Platformer
             _jumpState = new JumpState(this, _animatior);
 
             //Define transition
-            At(_jumpState, _runState, new FuncPredicateBase(() => isStartJumpung));
-            At(_runState, _jumpState, new FuncPredicateBase(() => _groundChecker.IsGround && !isStartJumpung));
+            At(_jumpState, _runState, new FuncPredicateBase(() => !isStartJumpung));
+            At(_runState, _jumpState, new FuncPredicateBase(() => _groundChecker.IsGround && isStartJumpung));
 
             _stateMachine.SetState(_runState);
         }

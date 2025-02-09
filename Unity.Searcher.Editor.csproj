@@ -70,10 +70,10 @@
     <Compile Include="Library/PackageCache/com.unity.searcher@4.9.2/Editor/Searcher/SearcherWindow.cs" />
     <Compile Include="Library/PackageCache/com.unity.searcher@4.9.2/Editor/AssemblyInfo.cs" />
     <Compile Include="Library/PackageCache/com.unity.searcher@4.9.2/Editor/Searcher/SearcherDatabase.cs" />
-    <Compile Include="Library/PackageCache/com.unity.searcher@4.9.2/Editor/Searcher/SearcherControl.cs" />
-    <Compile Include="Library/PackageCache/com.unity.searcher@4.9.2/Editor/Searcher/SearcherTreeUtility.cs" />
     <Compile Include="Library/PackageCache/com.unity.searcher@4.9.2/Editor/Searcher/Searcher.cs" />
     <Compile Include="Library/PackageCache/com.unity.searcher@4.9.2/Editor/Searcher/SearcherItem.cs" />
+    <Compile Include="Library/PackageCache/com.unity.searcher@4.9.2/Editor/Searcher/SearcherControl.cs" />
+    <Compile Include="Library/PackageCache/com.unity.searcher@4.9.2/Editor/Searcher/SearcherTreeUtility.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Library/PackageCache/com.unity.searcher@4.9.2/Editor/Unity.Searcher.Editor.asmdef" />

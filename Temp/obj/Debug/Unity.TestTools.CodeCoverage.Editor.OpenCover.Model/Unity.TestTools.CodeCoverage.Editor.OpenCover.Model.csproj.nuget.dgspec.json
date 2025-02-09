@@ -1,0 +1,275 @@
+{
+  "format": 1,
+  "restore": {
+    "/Users/max_home/Projects/TEST_UNITY/UnityPlatformer/Unity.TestTools.CodeCoverage.Editor.OpenCover.Model.csproj": {}
+  },
+  "projects": {
+    "/Users/max_home/Projects/TEST_UNITY/UnityPlatformer/Unity.TestTools.CodeCoverage.Editor.OpenCover.Model.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "/Users/max_home/Projects/TEST_UNITY/UnityPlatformer/Unity.TestTools.CodeCoverage.Editor.OpenCover.Model.csproj",
+        "projectName": "Unity.TestTools.CodeCoverage.Editor.OpenCover.Model",
+        "projectPath": "/Users/max_home/Projects/TEST_UNITY/UnityPlatformer/Unity.TestTools.CodeCoverage.Editor.OpenCover.Model.csproj",
+        "packagesPath": "/Users/max_home/.nuget/packages/",
+        "outputPath": "/Users/max_home/Projects/TEST_UNITY/UnityPlatformer/Temp/obj/Debug/Unity.TestTools.CodeCoverage.Editor.OpenCover.Model/",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "/Users/max_home/.nuget/NuGet/NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "netstandard2.1"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "netstandard2.1": {
+            "targetAlias": "netstandard2.1",
+            "projectReferences": {
+              "/Users/max_home/Projects/TEST_UNITY/UnityPlatformer/UnityEditor.TestRunner.csproj": {
+                "projectPath": "/Users/max_home/Projects/TEST_UNITY/UnityPlatformer/UnityEditor.TestRunner.csproj"
+              },
+              "/Users/max_home/Projects/TEST_UNITY/UnityPlatformer/UnityEditor.UI.csproj": {
+                "projectPath": "/Users/max_home/Projects/TEST_UNITY/UnityPlatformer/UnityEditor.UI.csproj"
+              },
+              "/Users/max_home/Projects/TEST_UNITY/UnityPlatformer/UnityEngine.TestRunner.csproj": {
+                "projectPath": "/Users/max_home/Projects/TEST_UNITY/UnityPlatformer/UnityEngine.TestRunner.csproj"
+              },
+              "/Users/max_home/Projects/TEST_UNITY/UnityPlatformer/UnityEngine.UI.csproj": {
+                "projectPath": "/Users/max_home/Projects/TEST_UNITY/UnityPlatformer/UnityEngine.UI.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "netstandard2.1": {
+          "targetAlias": "netstandard2.1",
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/8.0.101/RuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "/Users/max_home/Projects/TEST_UNITY/UnityPlatformer/UnityEditor.TestRunner.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "/Users/max_home/Projects/TEST_UNITY/UnityPlatformer/UnityEditor.TestRunner.csproj",
+        "projectName": "UnityEditor.TestRunner",
+        "projectPath": "/Users/max_home/Projects/TEST_UNITY/UnityPlatformer/UnityEditor.TestRunner.csproj",
+        "packagesPath": "/Users/max_home/.nuget/packages/",
+        "outputPath": "/Users/max_home/Projects/TEST_UNITY/UnityPlatformer/Temp/obj/Debug/UnityEditor.TestRunner/",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "/Users/max_home/.nuget/NuGet/NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "netstandard2.1"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "netstandard2.1": {
+            "targetAlias": "netstandard2.1",
+            "projectReferences": {
+              "/Users/max_home/Projects/TEST_UNITY/UnityPlatformer/UnityEngine.TestRunner.csproj": {
+                "projectPath": "/Users/max_home/Projects/TEST_UNITY/UnityPlatformer/UnityEngine.TestRunner.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "netstandard2.1": {
+          "targetAlias": "netstandard2.1",
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/8.0.101/RuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "/Users/max_home/Projects/TEST_UNITY/UnityPlatformer/UnityEditor.UI.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "/Users/max_home/Projects/TEST_UNITY/UnityPlatformer/UnityEditor.UI.csproj",
+        "projectName": "UnityEditor.UI",
+        "projectPath": "/Users/max_home/Projects/TEST_UNITY/UnityPlatformer/UnityEditor.UI.csproj",
+        "packagesPath": "/Users/max_home/.nuget/packages/",
+        "outputPath": "/Users/max_home/Projects/TEST_UNITY/UnityPlatformer/Temp/obj/Debug/UnityEditor.UI/",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "/Users/max_home/.nuget/NuGet/NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "netstandard2.1"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "netstandard2.1": {
+            "targetAlias": "netstandard2.1",
+            "projectReferences": {
+              "/Users/max_home/Projects/TEST_UNITY/UnityPlatformer/UnityEditor.TestRunner.csproj": {
+                "projectPath": "/Users/max_home/Projects/TEST_UNITY/UnityPlatformer/UnityEditor.TestRunner.csproj"
+              },
+              "/Users/max_home/Projects/TEST_UNITY/UnityPlatformer/UnityEngine.TestRunner.csproj": {
+                "projectPath": "/Users/max_home/Projects/TEST_UNITY/UnityPlatformer/UnityEngine.TestRunner.csproj"
+              },
+              "/Users/max_home/Projects/TEST_UNITY/UnityPlatformer/UnityEngine.UI.csproj": {
+                "projectPath": "/Users/max_home/Projects/TEST_UNITY/UnityPlatformer/UnityEngine.UI.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "netstandard2.1": {
+          "targetAlias": "netstandard2.1",
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/8.0.101/RuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "/Users/max_home/Projects/TEST_UNITY/UnityPlatformer/UnityEngine.TestRunner.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "/Users/max_home/Projects/TEST_UNITY/UnityPlatformer/UnityEngine.TestRunner.csproj",
+        "projectName": "UnityEngine.TestRunner",
+        "projectPath": "/Users/max_home/Projects/TEST_UNITY/UnityPlatformer/UnityEngine.TestRunner.csproj",
+        "packagesPath": "/Users/max_home/.nuget/packages/",
+        "outputPath": "/Users/max_home/Projects/TEST_UNITY/UnityPlatformer/Temp/obj/Debug/UnityEngine.TestRunner/",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "/Users/max_home/.nuget/NuGet/NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "netstandard2.1"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "netstandard2.1": {
+            "targetAlias": "netstandard2.1",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "netstandard2.1": {
+          "targetAlias": "netstandard2.1",
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/8.0.101/RuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "/Users/max_home/Projects/TEST_UNITY/UnityPlatformer/UnityEngine.UI.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "/Users/max_home/Projects/TEST_UNITY/UnityPlatformer/UnityEngine.UI.csproj",
+        "projectName": "UnityEngine.UI",
+        "projectPath": "/Users/max_home/Projects/TEST_UNITY/UnityPlatformer/UnityEngine.UI.csproj",
+        "packagesPath": "/Users/max_home/.nuget/packages/",
+        "outputPath": "/Users/max_home/Projects/TEST_UNITY/UnityPlatformer/Temp/obj/Debug/UnityEngine.UI/",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "/Users/max_home/.nuget/NuGet/NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "netstandard2.1"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "netstandard2.1": {
+            "targetAlias": "netstandard2.1",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "netstandard2.1": {
+          "targetAlias": "netstandard2.1",
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/8.0.101/RuntimeIdentifierGraph.json"
+        }
+      }
+    }
+  }
+}

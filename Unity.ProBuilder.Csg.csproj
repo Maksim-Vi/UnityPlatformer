@@ -65,11 +65,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Library/PackageCache/com.unity.probuilder@5.1.1/External/CSG/Classes/Model.cs" />
+    <Compile Include="Library/PackageCache/com.unity.probuilder@5.1.1/External/CSG/Classes/Polygon.cs" />
+    <Compile Include="Library/PackageCache/com.unity.probuilder@5.1.1/External/CSG/Classes/Plane.cs" />
     <Compile Include="Library/PackageCache/com.unity.probuilder@5.1.1/External/CSG/Classes/VertexAttributes.cs" />
     <Compile Include="Library/PackageCache/com.unity.probuilder@5.1.1/External/CSG/Classes/Node.cs" />
     <Compile Include="Library/PackageCache/com.unity.probuilder@5.1.1/External/CSG/Classes/VertexUtility.cs" />
-    <Compile Include="Library/PackageCache/com.unity.probuilder@5.1.1/External/CSG/Classes/Polygon.cs" />
-    <Compile Include="Library/PackageCache/com.unity.probuilder@5.1.1/External/CSG/Classes/Plane.cs" />
     <Compile Include="Library/PackageCache/com.unity.probuilder@5.1.1/External/CSG/AssemblyInfo.cs" />
     <Compile Include="Library/PackageCache/com.unity.probuilder@5.1.1/External/CSG/Classes/Vertex.cs" />
     <Compile Include="Library/PackageCache/com.unity.probuilder@5.1.1/External/CSG/CSG.cs" />
