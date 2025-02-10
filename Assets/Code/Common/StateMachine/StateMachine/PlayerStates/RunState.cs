@@ -12,7 +12,7 @@ namespace Platformer
         {
             //_animator.CrossFade(MovementHash, crossFadeDuration);
         }
-
+        
         public override void OnFixedUpdate()
         {
             _playerController.HandleMovement();

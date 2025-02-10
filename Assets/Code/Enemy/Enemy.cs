@@ -27,6 +27,7 @@ namespace Platformer
         }
 
         private void Start() {
+            attackTimer = new CountdownTimer(timeBetweenAttacks);
             stateMachine = new StateMachine();
 
             var wanderState = new EnemyWanderState(this, animtior, agent, wanderRadius);
@@ -46,6 +47,7 @@ namespace Platformer
 
         private void Update() 
         {
+            attackTimer.Tick(Time.deltaTime);
             stateMachine.Update();
         }
 
@@ -56,7 +58,13 @@ namespace Platformer
 
         public void Attack()
         {
-            //Attack
+            if(attackTimer.IsRunning) return;
+
+            attackTimer.Start();
+
+            Debug.Log("ATTAKING");
+            
+            playerDetector.PlayerHealth.TakeDamage(5);
         }
     }
 }

@@ -14,6 +14,7 @@ namespace Platformer
         public event UnityAction EnableMouseControllCamera = delegate { };
         public event UnityAction DisableMouseControllCamera = delegate { };
         public event UnityAction<bool> Jump = delegate { };
+        public event UnityAction Attack = delegate { };
 
 
         LevelBuild inputActions;
@@ -81,6 +82,10 @@ namespace Platformer
 
         public void OnFire(InputAction.CallbackContext context)
         {
+            if(context.phase == InputActionPhase.Started)
+            {
+                Attack.Invoke();
+            }
             
         }
     }

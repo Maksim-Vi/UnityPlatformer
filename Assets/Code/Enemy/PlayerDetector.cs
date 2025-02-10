@@ -16,16 +16,21 @@ namespace Platformer
         [Header("Attack")]
         [SerializeField] float attackRange = 1f;
 
+        public HealthSystem PlayerHealth {get; private set;}
         public Transform Player {get; private set;}
 
         IDetectionStrategy detectionStrategy;
 
         CountdownTimer detectionTimer;
 
+        private void Awake() {
+            Player = GameObject.FindGameObjectWithTag("Player").transform;
+            PlayerHealth = Player.GetComponent<HealthSystem>();
+        }
+
         private void Start() 
         {
             detectionTimer = new CountdownTimer(detectionCooldown);
-            Player = GameObject.FindGameObjectWithTag("Player").transform;
             detectionStrategy = new ConeDetectionStrategy(detectionAngle, detectionRadius, innerDetectionRadius);
         }
 

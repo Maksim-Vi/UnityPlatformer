@@ -27,6 +27,10 @@ namespace Platformer
         [SerializeField] private float _jumpCooldown = 0f;
         [SerializeField] private float _gravityMultiplayer = 3f;
 
+        [Header("References Attack")]
+        [SerializeField] private float attackDictance = 1f;
+        [SerializeField] private int damageAmount = 10;
+ 
         Transform _mainCamera;
         const float ZeroF = 0f;
         float currentSpeed = 0f;
@@ -35,18 +39,14 @@ namespace Platformer
 
         Vector3 movement;
 
-        // List<Timer> timers;
-        // CountdownTimer jumpTimer;
-        // CountdownTimer jumpCooldownTimer;
-
         bool isStartJumpung = false;
         bool isStartedJumpung = false;
+        bool isAttacked = false;
 
         StateMachine _stateMachine;
         RunState _runState;
         JumpState _jumpState;
-
-        static readonly int speedAnimation = Animator.StringToHash("Speed");
+        AttackState _attackState;
 
         private void Awake() 
         {
@@ -63,10 +63,15 @@ namespace Platformer
             //initStates
             _runState = new RunState(this, _animatior);
             _jumpState = new JumpState(this, _animatior);
+            _attackState = new AttackState(this, _animatior);
 
             //Define transition
             At(_jumpState, _runState, new FuncPredicateBase(() => !isStartJumpung));
             At(_runState, _jumpState, new FuncPredicateBase(() => _groundChecker.IsGround && isStartJumpung));
+            At(_runState, _attackState, new FuncPredicateBase(() => isAttacked));
+            At(_attackState, _runState, new FuncPredicateBase(() => !isAttacked));
+
+            Any(_runState, new FuncPredicateBase(() => _groundChecker.IsGround && !isStartJumpung && !isAttacked));
 
             _stateMachine.SetState(_runState);
         }
@@ -79,11 +84,13 @@ namespace Platformer
         private void OnEnable() 
         {
             _input.Jump += OnJump;
+            _input.Attack += OnAttack;
         }
 
         private void OnDisable() 
         {
             _input.Jump -= OnJump;
+            _input.Attack -= OnAttack;
         }
 
         private void Update() 
@@ -107,8 +114,13 @@ namespace Platformer
             {
                 isStartJumpung = true;
                 jumpVelocity = _jumpForce;
-                // HandleJump();
             }
+        }
+
+        private void OnAttack()
+        {
+            if(!isAttacked)
+                isAttacked = true;
         }
 
         public void HandleIdle()
@@ -172,6 +184,26 @@ namespace Platformer
             transform.LookAt(transform.position + adjustedDirection);
         }
 
+        public void Attack()
+        {
+            if(isAttacked)
+            {
+                Vector3 attackPosition = transform.position + transform.forward;
+                Collider[] hitEnnimies = Physics.OverlapSphere(attackPosition, attackDictance);
+
+                foreach (var enemy in hitEnnimies)
+                {
+                    if(enemy.CompareTag("Enemy"))
+                    {
+                        enemy.GetComponent<HealthSystem>().TakeDamage(damageAmount);
+                    }
+                }
+
+                isAttacked = false;
+            }
+
+        }
+
         private void UpdateAnimator(float val)
         {
             _animatior.SetFloat("Speed", val);
@@ -181,16 +213,5 @@ namespace Platformer
         {
             currentSpeed = Mathf.SmoothDamp(currentSpeed, val, ref velocity, _smoothTime);
         }
-
-        // private void HandleTimer()
-        // {
-        //     foreach (var timer in timers)
-        //     {
-        //         if(Time.deltaTime == 0f){
-        //             Debug.Log("timer");
-        //         }
-        //         timer.Tick(Time.deltaTime);
-        //     }
-        // }
     }
 }

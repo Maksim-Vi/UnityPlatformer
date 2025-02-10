@@ -70,6 +70,7 @@
     <Compile Include="Assets/Code/Common/StateMachine/StateMachine/EnemyStates/EnemyAttackState.cs" />
     <Compile Include="Assets/TextMesh Pro/Examples &amp; Extras/Scripts/VertexShakeA.cs" />
     <Compile Include="Assets/Code/Enemy/DetectionStrategy/ConeDetectionStrategy.cs" />
+    <Compile Include="Assets/Code/Common/EventSystem/Listeners/FloatEventListener.cs" />
     <Compile Include="Assets/TextMesh Pro/Examples &amp; Extras/Scripts/EnvMapAnimator.cs" />
     <Compile Include="Assets/Code/Common/SpawnSystem/RandomSpawnPointStrategy.cs" />
     <Compile Include="Assets/TextMesh Pro/Examples &amp; Extras/Scripts/TMP_TextSelector_A.cs" />
@@ -91,6 +92,7 @@
     <Compile Include="Assets/DOTween/Modules/DOTweenModulePhysics2D.cs" />
     <Compile Include="Assets/Code/Player/CameraManager.cs" />
     <Compile Include="Assets/DOTween/Modules/DOTweenModuleUI.cs" />
+    <Compile Include="Assets/Code/HealthSystem/HealthSystem.cs" />
     <Compile Include="Assets/Code/Entity/SpawnEffect.cs" />
     <Compile Include="Assets/Code/Common/SpawnSystem/LinerSpawnPointStrategy.cs" />
     <Compile Include="Assets/Code/Entity/Entity.cs" />
@@ -101,11 +103,13 @@
     <Compile Include="Assets/Code/Setting/PlayerInputActions.cs" />
     <Compile Include="Assets/TextMesh Pro/Examples &amp; Extras/Scripts/Benchmark03.cs" />
     <Compile Include="Assets/Code/Common/SpawnSystem/ISpawnPintStrategy.cs" />
+    <Compile Include="Assets/Code/Common/EventSystem/Listeners/EventListener.cs" />
     <Compile Include="Assets/DOTween/Modules/DOTweenModuleEPOOutline.cs" />
     <Compile Include="Assets/Code/Common/SpawnSystem/EntityData.cs" />
     <Compile Include="Assets/Code/Entity/CollectibleSpawnManager.cs" />
     <Compile Include="Assets/Code/Common/Ground/GroundChecker.cs" />
     <Compile Include="Assets/Code/Common/SpawnSystem/CollactableData.cs" />
+    <Compile Include="Assets/Code/Common/StateMachine/StateMachine/PlayerStates/AttackState.cs" />
     <Compile Include="Assets/Code/Common/StateMachine/StateMachine/PlayerStates/RunState.cs" />
     <Compile Include="Assets/Code/Enemy/PlayerDetector.cs" />
     <Compile Include="Assets/Code/Entity/Factory/EntityFactory.cs" />
@@ -115,6 +119,7 @@
     <Compile Include="Assets/TextMesh Pro/Examples &amp; Extras/Scripts/TMPro_InstructionOverlay.cs" />
     <Compile Include="Assets/DOTween/Modules/DOTweenModuleAudio.cs" />
     <Compile Include="Assets/TextMesh Pro/Examples &amp; Extras/Scripts/VertexShakeB.cs" />
+    <Compile Include="Assets/Code/Common/EventSystem/IntEventChannel.cs" />
     <Compile Include="Assets/TextMesh Pro/Examples &amp; Extras/Scripts/DropdownSample.cs" />
     <Compile Include="Assets/TextMesh Pro/Examples &amp; Extras/Scripts/VertexColorCycler.cs" />
     <Compile Include="Assets/Code/Common/StateMachine/StateMachine/EnemyStates/EnemyWanderState.cs" />
@@ -127,10 +132,13 @@
     <Compile Include="Assets/TextMesh Pro/Examples &amp; Extras/Scripts/TeleType.cs" />
     <Compile Include="Assets/TextMesh Pro/Examples &amp; Extras/Scripts/TMP_TextEventCheck.cs" />
     <Compile Include="Assets/TextMesh Pro/Examples &amp; Extras/Scripts/TMP_UiFrameRateCounter.cs" />
+    <Compile Include="Assets/Code/Common/EventSystem/Listeners/IntEventListener.cs" />
     <Compile Include="Assets/TextMesh Pro/Examples &amp; Extras/Scripts/VertexZoom.cs" />
     <Compile Include="Assets/Code/Entity/EntitySpawner.cs" />
+    <Compile Include="Assets/Code/Common/EventSystem/EventChannel.cs" />
     <Compile Include="Assets/Code/Common/StateMachine/StateMachine/PlayerStates/JumpState.cs" />
     <Compile Include="Assets/TextMesh Pro/Examples &amp; Extras/Scripts/TMP_TextSelector_B.cs" />
+    <Compile Include="Assets/Code/Common/EventSystem/FloatEventChannel.cs" />
     <Compile Include="Assets/DOTween/Modules/DOTweenModuleSprite.cs" />
     <Compile Include="Assets/TextMesh Pro/Examples &amp; Extras/Scripts/SkewTextExample.cs" />
     <Compile Include="Assets/Code/Entity/EntitySpawnManager.cs" />
