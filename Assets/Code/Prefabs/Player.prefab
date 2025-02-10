@@ -102,11 +102,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2066896392038628070, guid: 45288819fde2143449a96207b14db0bb, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2066896392038628118, guid: 45288819fde2143449a96207b14db0bb, type: 3}
       propertyPath: m_Name
       value: DogPolyart
+      objectReference: {fileID: 0}
+    - target: {fileID: 2066896392038628118, guid: 45288819fde2143449a96207b14db0bb, type: 3}
+      propertyPath: m_TagString
+      value: Player
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -120,7 +124,7 @@ PrefabInstance:
       addedObject: {fileID: 1058166880862670743}
     - targetCorrespondingSourceObject: {fileID: 2066896392038628118, guid: 45288819fde2143449a96207b14db0bb, type: 3}
       insertIndex: 3
-      addedObject: {fileID: 6418939190614496010}
+      addedObject: {fileID: 8198062660479461513}
     - targetCorrespondingSourceObject: {fileID: 2066896392038628118, guid: 45288819fde2143449a96207b14db0bb, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1576151374649175457}
@@ -158,6 +162,8 @@ MonoBehaviour:
   _jumpDuration: 0.5
   _jumpCooldown: 0
   _gravityMultiplayer: 3
+  attackDictance: 1
+  damageAmount: 10
 --- !u!114 &1058166880862670743
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -174,7 +180,7 @@ MonoBehaviour:
   _groundLayer:
     serializedVersion: 2
     m_Bits: 65
---- !u!114 &6418939190614496010
+--- !u!114 &8198062660479461513
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -183,9 +189,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 2130146488004295839}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 80220d4ed54b04e429eb211970911d28, type: 3}
+  m_Script: {fileID: 11500000, guid: cfadc1de45d014bd2bd8561ed1dd5e0a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  maxHealth: 100
+  playerHealthChannel: {fileID: 11400000, guid: e874b069c003f46bf816e7cee98d6734, type: 2}
 --- !u!136 &1576151374649175457
 CapsuleCollider:
   m_ObjectHideFlags: 0

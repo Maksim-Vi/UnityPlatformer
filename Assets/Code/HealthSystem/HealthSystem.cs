@@ -21,6 +21,18 @@ namespace Platformer
             PublishHealthPercentage();
         }
 
+        public void GetHealth(int health)
+        {
+            if(playerHealthChannel != null && currentHealth < 100){
+                currentHealth += health;
+
+                if(currentHealth > maxHealth)
+                    currentHealth = 100;
+                
+                playerHealthChannel.Invoke(currentHealth / (float)maxHealth);
+            }
+        }
+
         public void TakeDamage(int damage)
         {
             currentHealth -= damage;
