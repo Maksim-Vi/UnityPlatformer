@@ -2176,9 +2176,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   spawnPointStrategyType: 0
   spawnPoints:
-  - {x: 22.7, y: 2.77, z: 19.322}
-  - {x: 27.292, y: 3, z: 17.606}
-  - {x: 27.047, y: 3.361, z: 14.845}
+  - {fileID: 560088162906460655}
+  - {fileID: 1052538276526191021}
+  - {fileID: 7386882511766363002}
+  - {fileID: 3485730286687104232}
   collactableData:
   - {fileID: 11400000, guid: 1054b454635a2438c9ac394aed155886, type: 2}
   spawnPlace: {fileID: 1807948632}
@@ -4901,7 +4902,11 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 560088162906460655}
+  - {fileID: 1052538276526191021}
+  - {fileID: 7386882511766363002}
+  - {fileID: 3485730286687104232}
   m_Father: {fileID: 957857465}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1894037926
@@ -5389,6 +5394,68 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   scores: 50
   scoreChannel: {fileID: 11400000, guid: ce5be50418bb24017a721a970751f212, type: 2}
+--- !u!1 &418990144350595863
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1052538276526191021}
+  m_Layer: 0
+  m_Name: spwan_2
+  m_TagString: coins
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &560088162906460655
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 904666742221998933}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: 0.39237824, z: -0, w: 0.919804}
+  m_LocalPosition: {x: 26.844378, y: 3.07, z: 15.276593}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1807948633}
+  m_LocalEulerAnglesHint: {x: 0, y: 46.205, z: 0}
+--- !u!1 &904666742221998933
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 560088162906460655}
+  m_Layer: 0
+  m_Name: spwan_1
+  m_TagString: coins
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1052538276526191021
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 418990144350595863}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: 0.39237824, z: -0, w: 0.919804}
+  m_LocalPosition: {x: 27.19, y: 3.029, z: 14.27}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1807948633}
+  m_LocalEulerAnglesHint: {x: 0, y: 46.205, z: 0}
 --- !u!1001 &1745787045907198283
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5453,6 +5520,52 @@ PrefabInstance:
       insertIndex: 4
       addedObject: {fileID: 1156758814}
   m_SourcePrefab: {fileID: 100100000, guid: 843ebf27b44b848928b199edae07842b, type: 3}
+--- !u!4 &3485730286687104232
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4257060081519982162}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: 0.39237824, z: -0, w: 0.919804}
+  m_LocalPosition: {x: 22.21, y: 2.47, z: 20.73}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1807948633}
+  m_LocalEulerAnglesHint: {x: 0, y: 46.205, z: 0}
+--- !u!1 &4257060081519982162
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3485730286687104232}
+  m_Layer: 0
+  m_Name: spwan_4
+  m_TagString: coins
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7386882511766363002
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7910759857166303680}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: 0.39237824, z: -0, w: 0.919804}
+  m_LocalPosition: {x: 21.66, y: 2.47, z: 20.87}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1807948633}
+  m_LocalEulerAnglesHint: {x: 0, y: 46.205, z: 0}
 --- !u!1001 &7902838994632322037
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5520,6 +5633,22 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 2118682772}
   m_SourcePrefab: {fileID: 100100000, guid: 024e31d32df4b457481be35ddae7dc90, type: 3}
+--- !u!1 &7910759857166303680
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7386882511766363002}
+  m_Layer: 0
+  m_Name: spwan_3
+  m_TagString: coins
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
 --- !u!1001 &9098935370105429792
 PrefabInstance:
   m_ObjectHideFlags: 0
