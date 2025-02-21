@@ -7,9 +7,9 @@ namespace Platformer
         protected readonly PlayerController _playerController;
         protected readonly Animator _animator;
 
-        protected static readonly int IdleHash = Animator.StringToHash("Idle_Battle");
-        protected static readonly int MovementHash = Animator.StringToHash("RunForwardBattle");
+        protected static readonly int MovementHash = Animator.StringToHash("Idle_Move");
         protected static readonly int AttackHash = Animator.StringToHash("`Attack01");
+        protected static readonly int JumpHash = Animator.StringToHash("Jump");
 
         protected const float crossFadeDuration = 0.1f;
 

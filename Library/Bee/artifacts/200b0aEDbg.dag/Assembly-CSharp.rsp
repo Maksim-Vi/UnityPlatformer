@@ -428,6 +428,7 @@
 "Assets/Code/Entity/SpawnEffect.cs"
 "Assets/Code/HealthSystem/HealthSystem.cs"
 "Assets/Code/Player/CameraManager.cs"
+"Assets/Code/Player/Clamb/PlayerClimbingSystem.cs"
 "Assets/Code/Player/InputReader.cs"
 "Assets/Code/Player/PlayerController.cs"
 "Assets/Code/Setting/PlayerInputActions.cs"

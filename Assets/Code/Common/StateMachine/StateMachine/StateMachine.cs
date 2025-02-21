@@ -13,7 +13,7 @@ namespace Platformer
         {
             var transition = GetTransition();
 
-            if(transition!= null)
+            if(transition!= null && transition.To != current._state)
                 ChangeState(transition.To);
 
             current._state?.OnUpdate();

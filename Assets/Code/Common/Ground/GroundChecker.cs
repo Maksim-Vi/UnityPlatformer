@@ -5,14 +5,19 @@ namespace Platformer
 {
     public class GroundChecker : MonoBehaviour
     {
-        [SerializeField] float _groundDistance = 0.01f;
-        [SerializeField] LayerMask _groundLayer;
+       [SerializeField] LayerMask _groundLayer;
+        [SerializeField] float _groundDistance = 0.1f; // Small offset to detect ground properly
 
-        public bool IsGround { get; private set;}
+        public bool IsGround { get; private set; }
 
         private void Update() 
         {
-            IsGround = Physics.SphereCast(transform.position, _groundDistance, Vector3.down, out _, _groundDistance, _groundLayer);
+            IsOnGround();
+        }
+
+        private void IsOnGround()
+        {
+            IsGround = Physics.SphereCast(transform.position, 0.5f, Vector3.down, out _, _groundDistance, _groundLayer);
         }
     }
 }

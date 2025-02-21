@@ -10,7 +10,7 @@ namespace Platformer
 
         public override void OnEnter()
         {
-            _animator.CrossFade(AttackHash, crossFadeDuration);
+            //_animator.CrossFade(AttackHash, crossFadeDuration);
             _playerController.Attack();
         }
         

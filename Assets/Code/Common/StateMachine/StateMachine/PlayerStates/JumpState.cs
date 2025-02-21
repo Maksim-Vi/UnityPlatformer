@@ -11,7 +11,7 @@ namespace Platformer
 
         public override void OnEnter()
         {
-            //_animator.CrossFade(JumpHash, crossFadeDuration);
+            _animator.CrossFade(JumpHash, crossFadeDuration);
         }
 
         public override void OnFixedUpdate()

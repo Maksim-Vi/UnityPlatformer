@@ -10,12 +10,13 @@ namespace Platformer
 
         public override void OnEnter()
         {
-            //_animator.CrossFade(MovementHash, crossFadeDuration);
+            _animator.CrossFade(MovementHash, crossFadeDuration);
         }
-        
+
         public override void OnFixedUpdate()
         {
             _playerController.HandleMovement();
+            _playerController.AnimationChange();
         }
     }
 }

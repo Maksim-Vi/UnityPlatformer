@@ -1,16 +1,25 @@
-using System.Threading.Tasks;
 using Cinemachine;
 using KBCore.Refs;
 using UnityEngine;
 using Cysharp.Threading.Tasks;
+using System.Collections.Generic;
+using Utilits;
+using System.Threading.Tasks;
 
 namespace Platformer
 {
     public class PlayerController : ValidatedMonoBehaviour
     {
+        public InputReader input => _input;
+        public GroundChecker groundChecker => _groundChecker;
+        public Animator animatior => _animatior;
+        public Rigidbody rb => _rb;
+        public float currentSpeed => _currentSpeed;
+
         [Header("References")]
         [SerializeField, Self] Rigidbody _rb;
         [SerializeField, Self] Animator _animatior;
+        [SerializeField, Self] PlayerClimbingSystem _playerClimbingSystem;
         [SerializeField, Self] GroundChecker _groundChecker;
         [SerializeField, Anywhere] CinemachineFreeLook _freeLookVCam;
         [SerializeField, Anywhere] InputReader _input;
@@ -28,28 +37,28 @@ namespace Platformer
         [SerializeField] private float _gravityMultiplayer = 3f;
 
         [Header("References Attack")]
+        [SerializeField] private float _attackCooldown = 1f;
         [SerializeField] private float attackDictance = 1f;
         [SerializeField] private int damageAmount = 10;
  
         Transform _mainCamera;
         const float ZeroF = 0f;
-        float currentSpeed = 0f;
+        float _currentSpeed = 0f;
         float velocity = 0f;
         float jumpVelocity = 0f;
 
         Vector3 movement;
 
-        bool isStartJumpung = false;
-        bool isStartedJumpung = false;
-        bool isAttacked = false;
+        List<Timer> timers;
+        CountdownTimer jumpTimer;
+        CountdownTimer jumpCooldownTimer;
+        CountdownTimer attackTimer;
 
         StateMachine _stateMachine;
-        RunState _runState;
-        JumpState _jumpState;
-        AttackState _attackState;
 
         private void Awake() 
         {
+            _playerClimbingSystem.Init(this);
             _mainCamera = Camera.main.transform;
             _freeLookVCam.Follow = transform;
             _freeLookVCam.LookAt = transform;
@@ -57,21 +66,21 @@ namespace Platformer
 
             _rb.freezeRotation = true;
 
+            SetupTimers();
+
             //State Machine
             _stateMachine = new StateMachine();
 
             //initStates
-            _runState = new RunState(this, _animatior);
-            _jumpState = new JumpState(this, _animatior);
-            _attackState = new AttackState(this, _animatior);
+            var _runState = new RunState(this, _animatior);
+            var _jumpState = new JumpState(this, _animatior);
+            var _attackState = new AttackState(this, _animatior);
 
             //Define transition
-            At(_jumpState, _runState, new FuncPredicateBase(() => !isStartJumpung));
-            At(_runState, _jumpState, new FuncPredicateBase(() => _groundChecker.IsGround && isStartJumpung));
-            At(_runState, _attackState, new FuncPredicateBase(() => isAttacked));
-            At(_attackState, _runState, new FuncPredicateBase(() => !isAttacked));
-
-            Any(_runState, new FuncPredicateBase(() => _groundChecker.IsGround && !isStartJumpung && !isAttacked));
+            At(_runState, _jumpState, new FuncPredicateBase(() => jumpTimer.IsRunning));
+            At(_runState, _attackState, new FuncPredicateBase(() => attackTimer.IsRunning));
+            At(_attackState, _runState, new FuncPredicateBase(() => !attackTimer.IsRunning));
+            Any(_runState, new FuncPredicateBase(() =>  _groundChecker.IsGround && !jumpTimer.IsRunning && !attackTimer.IsRunning));
 
             _stateMachine.SetState(_runState);
         }
@@ -83,12 +92,14 @@ namespace Platformer
 
         private void OnEnable() 
         {
+            _input.Move += OnMove;
             _input.Jump += OnJump;
             _input.Attack += OnAttack;
         }
 
         private void OnDisable() 
         {
+            _input.Move -= OnMove;
             _input.Jump -= OnJump;
             _input.Attack -= OnAttack;
         }
@@ -97,6 +108,7 @@ namespace Platformer
         {
             movement = new Vector3(_input.Direction.x, 0f, _input.Direction.y);
             
+            HandleTimers();
             _stateMachine.Update();
         }
 
@@ -108,25 +120,44 @@ namespace Platformer
         void At(IState from, IState to, IPredicate condition) => _stateMachine.AddTransition(from, to, condition);
         void Any(IState to, IPredicate condition) => _stateMachine.AddAnyTransition(to, condition);
 
-        private void OnJump(bool isJumped)
+        void SetupTimers() {
+            // Setup timers
+            jumpTimer = new CountdownTimer(_jumpDuration);
+            jumpCooldownTimer = new CountdownTimer(_jumpCooldown);
+
+            jumpTimer.OnTimerStart += () => jumpVelocity = _jumpForce;
+            jumpTimer.OnTimerStop += () => jumpCooldownTimer.Start();
+
+            attackTimer = new CountdownTimer(_attackCooldown);
+
+            timers = new(5) {jumpTimer, jumpCooldownTimer, attackTimer};
+        }
+
+        private void OnMove(Vector2 vector)
         {
-            if(isJumped && _groundChecker.IsGround)
-            {
-                isStartJumpung = true;
-                jumpVelocity = _jumpForce;
+
+        } 
+
+        void OnJump(bool performed) {
+            if (performed && !jumpTimer.IsRunning && !jumpCooldownTimer.IsRunning && _groundChecker.IsGround) {
+                jumpTimer.Start();
+            } else if (!performed && jumpTimer.IsRunning) {
+                jumpTimer.Stop();
+                
             }
         }
 
-        private void OnAttack()
-        {
-            if(!isAttacked)
-                isAttacked = true;
+        void OnAttack() {
+            if (!attackTimer.IsRunning) {
+                attackTimer.Start();
+            }
         }
 
         public void HandleIdle()
         {
+            if(rb.isKinematic || jumpTimer.IsRunning || jumpCooldownTimer.IsRunning) return;
+
             SmoothSpeed(ZeroF);
-            UpdateAnimator(0f);
             _rb.velocity = new Vector3(ZeroF, _rb.velocity.y, ZeroF);
         }
 
@@ -139,40 +170,35 @@ namespace Platformer
             {
                 HandleRotation(adjustedDirection);
                 HandleHorizontalMovement(adjustedDirection);
-                SmoothSpeed(adjustedDirection.magnitude);
-
-                UpdateAnimator(0.5f);
-            }
-            else {
-              HandleIdle();
+                SmoothSpeed(1f);
+            } else {
+                HandleIdle();
             }
         }
 
-        public async void HandleJump()
+        public void HandleJump()
         {
-            if(!isStartJumpung && _groundChecker.IsGround)
-            { 
+            if(rb.isKinematic) return;
+
+            if (!jumpTimer.IsRunning && groundChecker.IsGround) {
                 jumpVelocity = ZeroF;
-                isStartJumpung = false;
-                isStartedJumpung = false;
-                // jumpTimer.Stop();
                 return;
             }
 
-            if(!isStartedJumpung){
-                isStartJumpung = false;
-                isStartedJumpung = true;
-
+            if (!jumpTimer.IsRunning) 
+            {
+                // Gravity takes over
                 jumpVelocity += Physics.gravity.y * _gravityMultiplayer * Time.fixedDeltaTime;
-                _rb.velocity = new Vector3(_rb.velocity.x, jumpVelocity, _rb.velocity.z);
-
-                await UniTask.Delay(50);
-                isStartedJumpung = false;
             }
+            
+            // Apply velocity
+            rb.velocity = new Vector3(rb.velocity.x, jumpVelocity, rb.velocity.z);
         }
 
         private void HandleHorizontalMovement(Vector3 adjustedDirection)
         {
+            if(rb.isKinematic) return;
+
             Vector3 velocity = adjustedDirection * _moveSpeed * Time.deltaTime;
             _rb.velocity = new Vector3(velocity.x, _rb.velocity.y, velocity.z);
         }
@@ -186,32 +212,32 @@ namespace Platformer
 
         public void Attack()
         {
-            if(isAttacked)
+            Vector3 attackPosition = transform.position + transform.forward;
+            Collider[] hitEnnimies = Physics.OverlapSphere(attackPosition, attackDictance);
+
+            foreach (var enemy in hitEnnimies)
             {
-                Vector3 attackPosition = transform.position + transform.forward;
-                Collider[] hitEnnimies = Physics.OverlapSphere(attackPosition, attackDictance);
-
-                foreach (var enemy in hitEnnimies)
+                if(enemy.CompareTag("Enemy"))
                 {
-                    if(enemy.CompareTag("Enemy"))
-                    {
-                        enemy.GetComponent<HealthSystem>().TakeDamage(damageAmount);
-                    }
+                    enemy.GetComponent<HealthSystem>().TakeDamage(damageAmount);
                 }
-
-                isAttacked = false;
             }
-
-        }
-
-        private void UpdateAnimator(float val)
-        {
-            _animatior.SetFloat("Speed", val);
         }
 
         void SmoothSpeed(float val)
         {
-            currentSpeed = Mathf.SmoothDamp(currentSpeed, val, ref velocity, _smoothTime);
+            _currentSpeed = val;
+        }
+
+        public void AnimationChange()
+        {
+            _animatior.SetFloat("Speed", _currentSpeed);
+        }
+
+        void HandleTimers() {
+            foreach (var timer in timers) {
+                timer.Tick(Time.deltaTime);
+            }
         }
     }
 }
