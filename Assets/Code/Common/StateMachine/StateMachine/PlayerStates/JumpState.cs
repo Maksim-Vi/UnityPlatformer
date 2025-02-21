@@ -11,7 +11,11 @@ namespace Platformer
 
         public override void OnEnter()
         {
-            _animator.CrossFade(JumpHash, crossFadeDuration);
+            if(_playerController.currentSpeed == 0){
+                _animator.CrossFade(JumpOnPlaceHash, 0f);
+            } else {
+                _animator.CrossFade(JumpHash, 0.1f);
+            }
         }
 
         public override void OnFixedUpdate()

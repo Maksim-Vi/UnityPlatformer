@@ -42,15 +42,15 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: d82f7d95952c94346bb39f43084d8e86, type: 3}
       propertyPath: m_LocalScale.x
-      value: 0.3
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: d82f7d95952c94346bb39f43084d8e86, type: 3}
       propertyPath: m_LocalScale.y
-      value: 0.3
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: d82f7d95952c94346bb39f43084d8e86, type: 3}
       propertyPath: m_LocalScale.z
-      value: 0.3
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: d82f7d95952c94346bb39f43084d8e86, type: 3}
       propertyPath: m_LocalPosition.x
@@ -1628,6 +1628,7 @@ MonoBehaviour:
   _jumpDuration: 0.5
   _jumpCooldown: 0
   _gravityMultiplayer: 3
+  _attackCooldown: 1
   attackDictance: 1
   damageAmount: 10
 --- !u!114 &1193255796562402667
@@ -1707,10 +1708,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0f6646dad183142e9ac5daa5e97bc2fb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _groundDistance: 0.01
   _groundLayer:
     serializedVersion: 2
     m_Bits: 65
+  _groundDistance: 0.01
+  _groundDistanceDetect: 0.5
 --- !u!54 &1992654213868867231
 Rigidbody:
   m_ObjectHideFlags: 0

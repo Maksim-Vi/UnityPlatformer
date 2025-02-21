@@ -6706,7 +6706,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6434260823190093322, guid: 39726097b45ae4f268d8ff0c75a83660, type: 3}
       propertyPath: _groundDistance
-      value: 0.1
+      value: 0.2
       objectReference: {fileID: 0}
     - target: {fileID: 6486751323515911024, guid: 39726097b45ae4f268d8ff0c75a83660, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -6770,7 +6770,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7025732894256417707, guid: 39726097b45ae4f268d8ff0c75a83660, type: 3}
       propertyPath: _jumpForce
-      value: 1
+      value: 0.6
+      objectReference: {fileID: 0}
+    - target: {fileID: 7025732894256417707, guid: 39726097b45ae4f268d8ff0c75a83660, type: 3}
+      propertyPath: _moveSpeed
+      value: 80
       objectReference: {fileID: 0}
     - target: {fileID: 7025732894256417707, guid: 39726097b45ae4f268d8ff0c75a83660, type: 3}
       propertyPath: _freeLookVCam
@@ -6778,11 +6782,15 @@ PrefabInstance:
       objectReference: {fileID: 290552953}
     - target: {fileID: 7025732894256417707, guid: 39726097b45ae4f268d8ff0c75a83660, type: 3}
       propertyPath: _jumpCooldown
-      value: 0.5
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7025732894256417707, guid: 39726097b45ae4f268d8ff0c75a83660, type: 3}
       propertyPath: _jumpDuration
-      value: 0.5
+      value: 1.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 7025732894256417707, guid: 39726097b45ae4f268d8ff0c75a83660, type: 3}
+      propertyPath: _gravityMultiplayer
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 7062879284084580259, guid: 39726097b45ae4f268d8ff0c75a83660, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x

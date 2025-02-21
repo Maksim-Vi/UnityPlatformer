@@ -1,10 +1,8 @@
 using Cinemachine;
 using KBCore.Refs;
 using UnityEngine;
-using Cysharp.Threading.Tasks;
 using System.Collections.Generic;
 using Utilits;
-using System.Threading.Tasks;
 
 namespace Platformer
 {
@@ -141,9 +139,6 @@ namespace Platformer
         void OnJump(bool performed) {
             if (performed && !jumpTimer.IsRunning && !jumpCooldownTimer.IsRunning && _groundChecker.IsGround) {
                 jumpTimer.Start();
-            } else if (!performed && jumpTimer.IsRunning) {
-                jumpTimer.Stop();
-                
             }
         }
 
@@ -182,6 +177,7 @@ namespace Platformer
 
             if (!jumpTimer.IsRunning && groundChecker.IsGround) {
                 jumpVelocity = ZeroF;
+                rb.velocity = new Vector3(rb.velocity.x, jumpVelocity, rb.velocity.z);
                 return;
             }
 
@@ -190,8 +186,8 @@ namespace Platformer
                 // Gravity takes over
                 jumpVelocity += Physics.gravity.y * _gravityMultiplayer * Time.fixedDeltaTime;
             }
-            
-            // Apply velocity
+
+            jumpVelocity = Mathf.Max(jumpVelocity, Physics.gravity.y * _gravityMultiplayer);
             rb.velocity = new Vector3(rb.velocity.x, jumpVelocity, rb.velocity.z);
         }
 
