@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Threading.Tasks;
 using UnityEngine;
 
 namespace Platformer
@@ -17,118 +18,155 @@ namespace Platformer
         public ClambPlayerState clambPlayerState = ClambPlayerState.Normal;
         public bool isClimbing;
         public bool canGrabLedge = false;
-        [Space(5)] public GameObject climnObj;
 
         [Header("References climbing settings")]
         [SerializeField] public int rayAmount = 10;
-        [SerializeField] public float rayLangth = 0.5f;
+        [SerializeField] public float rayLength = 0.5f;
         [SerializeField] public float rayOffset = 0.15f;
         [SerializeField] public float rayHight = 0.5f;
-       [SerializeField] public LayerMask ledgeLayer;
+        [SerializeField] public LayerMask ledgeLayer;
+        public RaycastHit rayLedgeForwardHit;
+        public RaycastHit rayLedgeDownHit;
+        public float rayYHandCorrection = 0.1f;
+        public float rayZHandCorrection = 0.1f;
 
-        RaycastHit rayLedgeHit;
+        private bool hasMatchedTarget;
 
-
-        void Start()
-        {
+        void Start() {
             clambPlayerState = ClambPlayerState.Normal;
         }
 
-        private void OnDisable() 
-        {
+        private void OnDisable() {
             playerController.input.Climb -= OnClimb;
         }
 
-
-        public void Init(PlayerController playerController)
-        {
+        public void Init(PlayerController playerController) {
             this.playerController = playerController;
             playerController.input.Climb += OnClimb;
         }
 
-        private void Update() 
-        {
+        private void Update() {
             CheckingRay();
             StateConditionCheck();
+            MathTargetToLedge();
+            // _ = MatchHandPositionAsync();
         }
 
-        private void CheckingRay()
-        {
-            if(!isClimbing && playerController.groundChecker.IsGround)
-            {
+        private void CheckingRay() {
+            if (!isClimbing && playerController.groundChecker.IsGround) {
                 CheckOnGroundRay();
             }
         }
 
-        private void StateConditionCheck()
-        {
-            switch (clambPlayerState)
-            {
+        private void StateConditionCheck() {
+            switch (clambPlayerState) {
                 case ClambPlayerState.Normal:
-                    if(playerController.rb.isKinematic)
-                        playerController.rb.isKinematic = false;
-
+                    playerController.rb.isKinematic = false;
                     playerController.animatior.applyRootMotion = false;
                     break;
                 case ClambPlayerState.Clambing:
-                    if(!playerController.rb.isKinematic)
-                        playerController.rb.isKinematic = true;
-
-                    
+                    playerController.rb.isKinematic = true;
                     playerController.animatior.applyRootMotion = true;
-                    break;
-                default:
                     break;
             }
         }
 
-        private void OnClimb()
+        private void MathTargetToLedge() {
+            if (hasMatchedTarget) return;
+
+            AnimatorStateInfo animState = playerController.animatior.GetCurrentAnimatorStateInfo(0);
+            bool isCorrectState = animState.IsName("Idle To Braced Hang") && !playerController.animatior.IsInTransition(0);
+            
+            if (!isCorrectState) return; 
+
+            Vector3 handPos = rayLedgeDownHit.point + (transform.forward * rayZHandCorrection + transform.up * rayYHandCorrection);
+            float moveDuration = 0.1f;
+            StartCoroutine(MovePlayerToTarget(handPos, moveDuration));
+
+            hasMatchedTarget = true;
+        }
+
+        private IEnumerator MovePlayerToTarget(Vector3 targetPosition, float duration)
         {
-            if(!isClimbing)
+            Vector3 startPosition = transform.position;
+            float elapsedTime = 0f;
+
+            while (elapsedTime < duration)
             {
-                if(canGrabLedge)
-                    StartCoroutine(GrabLedge());
+                transform.position = Vector3.Lerp(startPosition, targetPosition, elapsedTime / duration);
+                elapsedTime += Time.deltaTime;
+                yield return null;
             }
-            else 
-            {
+
+            transform.position = targetPosition;
+        }
+
+        private void OnClimb() {
+            if (!isClimbing) {
+                if (canGrabLedge && rayLedgeDownHit.point != Vector3.zero) {
+                    Quaternion lookRot = Quaternion.LookRotation(-rayLedgeForwardHit.normal);
+                    transform.rotation = Quaternion.Slerp(transform.rotation, lookRot, Time.deltaTime);
+
+                    StartCoroutine(GrabLedge());
+                }
+            } else {
                 StartCoroutine(ThrowLedge());
             }
         }
 
-        private void CheckOnGroundRay()
-        {
-            for (int i = 0; i < rayAmount; i++)
+        private void CheckOnGroundRay() {
+            if(!isClimbing && playerController.groundChecker.IsGround) 
             {
-                Vector3 rayPosition = transform.position + Vector3.up * rayHight + Vector3.up * rayOffset * i;
-            
-                Debug.DrawRay(rayPosition, transform.forward, Color.cyan);
-
-                if(Physics.Raycast(rayPosition, transform.forward, out rayLedgeHit, rayLangth, ledgeLayer))
+                for (int i = 0; i < rayAmount; i++)
                 {
-                    climnObj = rayLedgeHit.transform.gameObject;
-                    canGrabLedge = true;
-                    break;
-                }
+                    Vector3 rayPosition = transform.position + Vector3.up * rayHight + Vector3.up * rayOffset * i;
 
-                canGrabLedge = false;
+                    Debug.DrawRay(rayPosition, transform.forward, Color.red);
+
+                    if (Physics.Raycast(rayPosition, transform.forward, out rayLedgeForwardHit, rayLength, ledgeLayer, QueryTriggerInteraction.Ignore))
+                    {
+                        canGrabLedge = true;
+
+                        Debug.DrawRay(rayLedgeForwardHit.point + Vector3.up * 0.2f, Vector3.down * 0.5f, Color.blue);
+                        if (Physics.Raycast(rayLedgeForwardHit.point + Vector3.up * 0.2f, Vector3.down, out rayLedgeDownHit, 0.5f, ledgeLayer)) {
+                            Debug.Log("Влучили у: " + rayLedgeDownHit.collider.name + " на позиції " + rayLedgeDownHit.point);
+                        } else {
+                            Debug.Log("Raycast не влучив у ledgeLayer!");
+                        }
+                        return;
+                    }
+                    else
+                    {
+                        canGrabLedge = false;
+                    }
+                }
             }
         }
 
-        IEnumerator GrabLedge()
-        { 
+        IEnumerator GrabLedge() { 
             isClimbing = true;
-            clambPlayerState = ClambPlayerState.Clambing;
-            // set animation from idle to clamb
+            hasMatchedTarget = false;
 
-            yield return new WaitForSeconds(1);
+            clambPlayerState = ClambPlayerState.Clambing;
+
+            playerController.animatior.CrossFade("Idle To Braced Hang", 0.08f);
+
+            yield return null;
         } 
-        
-        IEnumerator ThrowLedge()
-        { 
+
+        IEnumerator ThrowLedge() { 
             isClimbing = false;
-           // set animation from clamb to idle
-            yield return new WaitForSeconds(1);
+            hasMatchedTarget = false;
+            playerController.animatior.CrossFade("Braced Hang Drop Ground", 0.1f);
+            yield return new WaitForSeconds(0.5f);
             clambPlayerState = ClambPlayerState.Normal;
+        }
+
+        void OnDrawGizmos() {
+            if (rayLedgeDownHit.point != Vector3.zero) {
+                Gizmos.color = Color.yellow;
+                Gizmos.DrawSphere(rayLedgeDownHit.point, 0.05f);
+            }
         }
     }
 }
