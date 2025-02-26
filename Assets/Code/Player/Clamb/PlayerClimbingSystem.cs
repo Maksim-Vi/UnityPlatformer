@@ -1,6 +1,5 @@
 using System;
 using System.Collections;
-using System.Threading.Tasks;
 using UnityEngine;
 
 namespace Platformer
@@ -12,28 +11,36 @@ namespace Platformer
 
     public class PlayerClimbingSystem : MonoBehaviour 
     {
+        [HideInInspector] public PlayerController pController => playerController;
         private PlayerController playerController;
 
         [Header("Info view")]
         public ClambPlayerState clambPlayerState = ClambPlayerState.Normal;
         public bool isClimbing;
         public bool canGrabLedge = false;
+        [SerializeField] public LayerMask ledgeLayer;
 
-        [Header("References climbing settings")]
+        [Header("References climbing grap settings")]
         [SerializeField] public int rayAmount = 10;
         [SerializeField] public float rayLength = 0.5f;
         [SerializeField] public float rayOffset = 0.15f;
         [SerializeField] public float rayHight = 0.5f;
-        [SerializeField] public LayerMask ledgeLayer;
-        public RaycastHit rayLedgeForwardHit;
-        public RaycastHit rayLedgeDownHit;
         public float rayYHandCorrection = 0.1f;
         public float rayZHandCorrection = 0.1f;
+        
+        [Header("References climbing move settings")]
+
+        public RaycastHit rayLedgeForwardHit;
+        public RaycastHit rayLedgeDownHit;
+
+        private ClimbingGrabManager _climbingGrabManager;
 
         private bool hasMatchedTarget;
 
         void Start() {
             clambPlayerState = ClambPlayerState.Normal;
+
+            _climbingGrabManager = new ClimbingGrabManager(this, rayAmount, rayLength, rayOffset, rayHight, rayYHandCorrection, rayZHandCorrection);
         }
 
         private void OnDisable() {
@@ -46,15 +53,15 @@ namespace Platformer
         }
 
         private void Update() {
+            _climbingGrabManager.OnUpdate();
+            
             CheckingRay();
             StateConditionCheck();
-            MathTargetToLedge();
-            // _ = MatchHandPositionAsync();
         }
 
         private void CheckingRay() {
             if (!isClimbing && playerController.groundChecker.IsGround) {
-                CheckOnGroundRay();
+                _climbingGrabManager.CheckOnGroundRay();
             }
         }
 
@@ -71,36 +78,6 @@ namespace Platformer
             }
         }
 
-        private void MathTargetToLedge() {
-            if (hasMatchedTarget) return;
-
-            AnimatorStateInfo animState = playerController.animatior.GetCurrentAnimatorStateInfo(0);
-            bool isCorrectState = animState.IsName("Idle To Braced Hang") && !playerController.animatior.IsInTransition(0);
-            
-            if (!isCorrectState) return; 
-
-            Vector3 handPos = rayLedgeDownHit.point + (transform.forward * rayZHandCorrection + transform.up * rayYHandCorrection);
-            float moveDuration = 0.1f;
-            StartCoroutine(MovePlayerToTarget(handPos, moveDuration));
-
-            hasMatchedTarget = true;
-        }
-
-        private IEnumerator MovePlayerToTarget(Vector3 targetPosition, float duration)
-        {
-            Vector3 startPosition = transform.position;
-            float elapsedTime = 0f;
-
-            while (elapsedTime < duration)
-            {
-                transform.position = Vector3.Lerp(startPosition, targetPosition, elapsedTime / duration);
-                elapsedTime += Time.deltaTime;
-                yield return null;
-            }
-
-            transform.position = targetPosition;
-        }
-
         private void OnClimb() {
             if (!isClimbing) {
                 if (canGrabLedge && rayLedgeDownHit.point != Vector3.zero) {
@@ -111,35 +88,6 @@ namespace Platformer
                 }
             } else {
                 StartCoroutine(ThrowLedge());
-            }
-        }
-
-        private void CheckOnGroundRay() {
-            if(!isClimbing && playerController.groundChecker.IsGround) 
-            {
-                for (int i = 0; i < rayAmount; i++)
-                {
-                    Vector3 rayPosition = transform.position + Vector3.up * rayHight + Vector3.up * rayOffset * i;
-
-                    Debug.DrawRay(rayPosition, transform.forward, Color.red);
-
-                    if (Physics.Raycast(rayPosition, transform.forward, out rayLedgeForwardHit, rayLength, ledgeLayer, QueryTriggerInteraction.Ignore))
-                    {
-                        canGrabLedge = true;
-
-                        Debug.DrawRay(rayLedgeForwardHit.point + Vector3.up * 0.2f, Vector3.down * 0.5f, Color.blue);
-                        if (Physics.Raycast(rayLedgeForwardHit.point + Vector3.up * 0.2f, Vector3.down, out rayLedgeDownHit, 0.5f, ledgeLayer)) {
-                            Debug.Log("Влучили у: " + rayLedgeDownHit.collider.name + " на позиції " + rayLedgeDownHit.point);
-                        } else {
-                            Debug.Log("Raycast не влучив у ledgeLayer!");
-                        }
-                        return;
-                    }
-                    else
-                    {
-                        canGrabLedge = false;
-                    }
-                }
             }
         }
 

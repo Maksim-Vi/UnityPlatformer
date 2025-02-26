@@ -141,6 +141,7 @@
     <Compile Include="Assets/TextMesh Pro/Examples &amp; Extras/Scripts/TMP_TextSelector_B.cs" />
     <Compile Include="Assets/Code/Common/EventSystem/FloatEventChannel.cs" />
     <Compile Include="Assets/DOTween/Modules/DOTweenModuleSprite.cs" />
+    <Compile Include="Assets/Code/Player/Clamb/ClimbingGrabManager.cs" />
     <Compile Include="Assets/TextMesh Pro/Examples &amp; Extras/Scripts/SkewTextExample.cs" />
     <Compile Include="Assets/Code/Entity/EntitySpawnManager.cs" />
     <Compile Include="Assets/TextMesh Pro/Examples &amp; Extras/Scripts/WarpTextExample.cs" />
