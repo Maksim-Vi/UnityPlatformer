@@ -6248,19 +6248,19 @@ MonoBehaviour:
   clambPlayerState: 0
   isClimbing: 0
   canGrabLedge: 0
+  _ledgeLayer:
+    serializedVersion: 2
+    m_Bits: 128
   rayAmount: 10
   rayLength: 0.3
   rayOffset: 0.1
   rayHight: 0.95
-  ledgeLayer:
-    serializedVersion: 2
-    m_Bits: 128
   rayYHandCorrection: -1.1
   rayZHandCorrection: -0.25
-  rayHopOffset: 0.1
+  rayHopAmount: 10
   rayHopLength: 0.3
-  hopRayAmount: 7
-  rayHopHeight: 0.95
+  rayHopOffset: 0.3
+  rayHopHight: 0.95
 --- !u!54 &2265346541053157065
 Rigidbody:
   m_ObjectHideFlags: 0

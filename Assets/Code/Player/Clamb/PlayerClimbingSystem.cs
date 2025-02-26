@@ -1,5 +1,7 @@
 using System;
 using System.Collections;
+using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 namespace Platformer
@@ -12,35 +14,38 @@ namespace Platformer
     public class PlayerClimbingSystem : MonoBehaviour 
     {
         [HideInInspector] public PlayerController pController => playerController;
+        [HideInInspector] public ClimbingGrabManager CGManager => _climbingGrabManager;
+        [HideInInspector] public LayerMask ledgeLayer => _ledgeLayer;
         private PlayerController playerController;
 
         [Header("Info view")]
         public ClambPlayerState clambPlayerState = ClambPlayerState.Normal;
         public bool isClimbing;
         public bool canGrabLedge = false;
-        [SerializeField] public LayerMask ledgeLayer;
+        [SerializeField] public LayerMask _ledgeLayer;
 
         [Header("References climbing grap settings")]
         [SerializeField] public int rayAmount = 10;
         [SerializeField] public float rayLength = 0.5f;
         [SerializeField] public float rayOffset = 0.15f;
         [SerializeField] public float rayHight = 0.5f;
-        public float rayYHandCorrection = 0.1f;
-        public float rayZHandCorrection = 0.1f;
+        [SerializeField] public float rayYHandCorrection = 0.1f;
+        [SerializeField] public float rayZHandCorrection = 0.1f;
         
         [Header("References climbing move settings")]
-
-        public RaycastHit rayLedgeForwardHit;
-        public RaycastHit rayLedgeDownHit;
+        [SerializeField] public int rayHopAmount = 10;
+        [SerializeField] public float rayHopLength = 0.5f;
+        [SerializeField] public float rayHopOffset = 0.15f;
+        [SerializeField] public float rayHopHight = 0.5f;
 
         private ClimbingGrabManager _climbingGrabManager;
-
-        private bool hasMatchedTarget;
+        private ClimbingMoveManager _climbingMoveManager;
 
         void Start() {
             clambPlayerState = ClambPlayerState.Normal;
 
             _climbingGrabManager = new ClimbingGrabManager(this, rayAmount, rayLength, rayOffset, rayHight, rayYHandCorrection, rayZHandCorrection);
+            _climbingMoveManager = new ClimbingMoveManager(this, rayHopAmount, rayHopLength, rayHopOffset, rayHopHight);
         }
 
         private void OnDisable() {
@@ -54,6 +59,7 @@ namespace Platformer
 
         private void Update() {
             _climbingGrabManager.OnUpdate();
+            _climbingMoveManager.OnUpdate();
             
             CheckingRay();
             StateConditionCheck();
@@ -80,41 +86,48 @@ namespace Platformer
 
         private void OnClimb() {
             if (!isClimbing) {
-                if (canGrabLedge && rayLedgeDownHit.point != Vector3.zero) {
-                    Quaternion lookRot = Quaternion.LookRotation(-rayLedgeForwardHit.normal);
+                if (canGrabLedge && _climbingGrabManager.rayLedgeDownHit.point != Vector3.zero) {
+                    Quaternion lookRot = Quaternion.LookRotation(-_climbingGrabManager.rayLedgeForwardHit.normal);
                     transform.rotation = Quaternion.Slerp(transform.rotation, lookRot, Time.deltaTime);
 
-                    StartCoroutine(GrabLedge());
+                    GrabLedge();
                 }
             } else {
-                StartCoroutine(ThrowLedge());
+                ThrowLedge();
             }
         }
 
-        IEnumerator GrabLedge() { 
+        void GrabLedge() { 
             isClimbing = true;
-            hasMatchedTarget = false;
-
+            _climbingGrabManager.hasMatchedTarget = false;
             clambPlayerState = ClambPlayerState.Clambing;
-
             playerController.animatior.CrossFade("Idle To Braced Hang", 0.08f);
-
-            yield return null;
         } 
 
-        IEnumerator ThrowLedge() { 
+        async void ThrowLedge() { 
             isClimbing = false;
-            hasMatchedTarget = false;
+            _climbingGrabManager.hasMatchedTarget = false;
             playerController.animatior.CrossFade("Braced Hang Drop Ground", 0.1f);
-            yield return new WaitForSeconds(0.5f);
+
+            await UniTask.Delay(500);
             clambPlayerState = ClambPlayerState.Normal;
         }
 
-        void OnDrawGizmos() {
-            if (rayLedgeDownHit.point != Vector3.zero) {
-                Gizmos.color = Color.yellow;
-                Gizmos.DrawSphere(rayLedgeDownHit.point, 0.05f);
-            }
+        public void HopUp()
+        {
+            playerController.animatior.CrossFade("Braced Hang Hop Up", 0.2f);
         }
+
+        public void HopDown()
+        {
+            playerController.animatior.CrossFade("Braced Hang Drop", 0.2f);
+        }
+
+        // void OnDrawGizmos() {
+        //     if (_climbingGrabManager.rayLedgeDownHit.point != Vector3.zero) {
+        //         Gizmos.color = Color.yellow;
+        //         Gizmos.DrawSphere(_climbingGrabManager.rayLedgeDownHit.point, 0.05f);
+        //     }
+        // }
     }
 }
