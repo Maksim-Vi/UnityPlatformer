@@ -133,7 +133,7 @@ namespace Platformer
 
         private void OnMove(Vector2 vector)
         {
-
+            _playerClimbingSystem.OnMove(vector);
         } 
 
         void OnJump(bool performed) {
@@ -150,7 +150,7 @@ namespace Platformer
 
         public void HandleIdle()
         {
-            if(rb.isKinematic || jumpTimer.IsRunning || jumpCooldownTimer.IsRunning) return;
+            if(rb.isKinematic || jumpTimer.IsRunning || jumpCooldownTimer.IsRunning || _playerClimbingSystem.isClimbing) return;
 
             SmoothSpeed(ZeroF);
             _rb.velocity = new Vector3(ZeroF, _rb.velocity.y, ZeroF);
@@ -173,7 +173,7 @@ namespace Platformer
 
         public void HandleJump()
         {
-            if(rb.isKinematic) return;
+            if(rb.isKinematic || _playerClimbingSystem.isClimbing) return;
 
             if (!jumpTimer.IsRunning && groundChecker.IsGround) {
                 jumpVelocity = ZeroF;
@@ -193,7 +193,7 @@ namespace Platformer
 
         private void HandleHorizontalMovement(Vector3 adjustedDirection)
         {
-            if(rb.isKinematic) return;
+            if(rb.isKinematic || _playerClimbingSystem.isClimbing) return;
 
             Vector3 velocity = adjustedDirection * _moveSpeed * Time.deltaTime;
             _rb.velocity = new Vector3(velocity.x, _rb.velocity.y, velocity.z);
@@ -201,13 +201,15 @@ namespace Platformer
 
         private void HandleRotation(Vector3 adjustedDirection)
         {
+            if(_playerClimbingSystem.isClimbing) return;
+
             var targetRotation = Quaternion.LookRotation(adjustedDirection);
             transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, _speedRotation * Time.deltaTime);
             transform.LookAt(transform.position + adjustedDirection);
         }
 
         public void Attack()
-        {
+        { 
             Vector3 attackPosition = transform.position + transform.forward;
             Collider[] hitEnnimies = Physics.OverlapSphere(attackPosition, attackDictance);
 

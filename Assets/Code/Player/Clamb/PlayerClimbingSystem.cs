@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
+using Unity.VisualScripting;
 using UnityEngine;
 
 namespace Platformer
@@ -13,22 +14,21 @@ namespace Platformer
 
     public class PlayerClimbingSystem : MonoBehaviour 
     {
-        [HideInInspector] public PlayerController pController => playerController;
-        [HideInInspector] public ClimbingGrabManager CGManager => _climbingGrabManager;
-        [HideInInspector] public LayerMask ledgeLayer => _ledgeLayer;
         private PlayerController playerController;
 
         [Header("Info view")]
         public ClambPlayerState clambPlayerState = ClambPlayerState.Normal;
         public bool isClimbing;
         public bool canGrabLedge = false;
-        [SerializeField] public LayerMask _ledgeLayer;
+        [SerializeField] public LayerMask ledgeLayer;
 
         [Header("References climbing grap settings")]
         [SerializeField] public int rayAmount = 10;
         [SerializeField] public float rayLength = 0.5f;
         [SerializeField] public float rayOffset = 0.15f;
         [SerializeField] public float rayHight = 0.5f;
+        
+        [Space(5)]
         [SerializeField] public float rayYHandCorrection = 0.1f;
         [SerializeField] public float rayZHandCorrection = 0.1f;
         
@@ -37,15 +37,14 @@ namespace Platformer
         [SerializeField] public float rayHopLength = 0.5f;
         [SerializeField] public float rayHopOffset = 0.15f;
         [SerializeField] public float rayHopHight = 0.5f;
-
-        private ClimbingGrabManager _climbingGrabManager;
-        private ClimbingMoveManager _climbingMoveManager;
+        [SerializeField] public float rayOffsetDown = 0.5f;
+       
+        [Space(5)] 
+        [SerializeField] public float frowardHopPos = 0.1f;
+        [SerializeField] public float upHopPos = 0.1f;
 
         void Start() {
             clambPlayerState = ClambPlayerState.Normal;
-
-            _climbingGrabManager = new ClimbingGrabManager(this, rayAmount, rayLength, rayOffset, rayHight, rayYHandCorrection, rayZHandCorrection);
-            _climbingMoveManager = new ClimbingMoveManager(this, rayHopAmount, rayHopLength, rayHopOffset, rayHopHight);
         }
 
         private void OnDisable() {
@@ -57,17 +56,24 @@ namespace Platformer
             playerController.input.Climb += OnClimb;
         }
 
+        Vector2 verticalInp;
+        public void OnMove(Vector2 vector)
+        {
+            verticalInp = vector;
+        }
+
         private void Update() {
-            _climbingGrabManager.OnUpdate();
-            _climbingMoveManager.OnUpdate();
-            
             CheckingRay();
+            MathTargetToLedge();
             StateConditionCheck();
+
+            HopUpDown();
+            CheckOnGroundRay();
         }
 
         private void CheckingRay() {
             if (!isClimbing && playerController.groundChecker.IsGround) {
-                _climbingGrabManager.CheckOnGroundRay();
+                CheckOnGroundRay();
             }
         }
 
@@ -86,31 +92,153 @@ namespace Platformer
 
         private void OnClimb() {
             if (!isClimbing) {
-                if (canGrabLedge && _climbingGrabManager.rayLedgeDownHit.point != Vector3.zero) {
-                    Quaternion lookRot = Quaternion.LookRotation(-_climbingGrabManager.rayLedgeForwardHit.normal);
+                if (canGrabLedge && rayLedgeDownHit.point != Vector3.zero) {
+                    Quaternion lookRot = Quaternion.LookRotation(-rayLedgeForwardHit.normal);
                     transform.rotation = Quaternion.Slerp(transform.rotation, lookRot, Time.deltaTime);
 
                     GrabLedge();
                 }
             } else {
-                ThrowLedge();
+                if(verticalInp == Vector2.zero) ThrowLedge();
+            }
+        }
+
+        public RaycastHit rayLedgeForwardHit;
+        public RaycastHit rayLedgeDownHit;
+
+        private void MathTargetToLedge() {
+            AnimatorStateInfo animState = playerController.animatior.GetCurrentAnimatorStateInfo(0);
+        
+            bool isCorrectState1 = animState.IsName("Braced Hang Hop Up") && !playerController.animatior.IsInTransition(0);
+            if (isCorrectState1)
+            {
+                // Vector3 handDropPos = hopLedgeDownHit.point + (transform.forward * rayZHandCorrection + transform.up * rayYHandCorrection);
+                //Vector3 handDropPos = hopLedgeDownHit.point + transform.forward * frowardHopPos + transform.up * upHopPos;
+                Vector3 handDropPos = hopLedgeDownHit.point;
+                Debug.Log("hopLedgeDownHit position" + handDropPos);
+                playerController.animatior.MatchTarget(handDropPos, transform.rotation, AvatarTarget.RightHand, new MatchTargetWeightMask(new Vector3(0, 1, 1), 0), 0.15f, 0.52f);
+                return;
+            }
+
+            bool isCorrectState2 = animState.IsName("Braced Hang Drop") && !playerController.animatior.IsInTransition(0);
+            if (isCorrectState2)
+            {
+                // Vector3 handDropPos = hopLedgeDownHit.point + (transform.forward * rayZHandCorrection + transform.up * rayYHandCorrection);
+                Vector3 handDropPos = hopLedgeDownHit.point + transform.forward * frowardHopPos + transform.up * upHopPos;
+                playerController.animatior.MatchTarget(handDropPos, transform.rotation, AvatarTarget.RightHand, new MatchTargetWeightMask(new Vector3(0, 1, 1), 0), 0.15f, 0.59f);
+                return;
+            }
+        }
+
+        public void CheckOnGroundRay()
+        {
+            for (int i = 0; i < rayAmount; i++)
+            {
+                Vector3 rayPosition = transform.position + Vector3.up * rayHight + Vector3.up * rayOffset * i;
+
+                Debug.DrawRay(rayPosition, transform.forward, Color.red);
+                if (Physics.Raycast(rayPosition, transform.forward, out rayLedgeForwardHit, rayLength, ledgeLayer, QueryTriggerInteraction.Ignore))
+                {
+                    canGrabLedge = true;
+
+                    Debug.DrawRay(rayLedgeForwardHit.point + Vector3.up * 0.5f, Vector3.down * 0.7f, Color.blue);
+                    Physics.Raycast(rayLedgeForwardHit.point + Vector3.up * 0.5f, Vector3.down, out rayLedgeDownHit, 0.7f, ledgeLayer);
+                    return;
+                }
+                else
+                {
+                    canGrabLedge = false;
+                }
+            }
+        }
+
+        RaycastHit hopLedgeDownHit;
+        private void HopUpDown()
+        {
+            if(isClimbing)
+            {
+                if (verticalInp.y < -0.1f)
+                {
+                    HopDownRayCheck();
+                }
+                else if (verticalInp.y > 0.1f)
+                {
+                    HopUpRayCheck();
+                }
+            }
+        }
+
+        private void HopUpRayCheck()
+        {
+            for (int i = 0; i < rayAmount; i++)
+            {
+            Vector3 rayPosition = transform.position + (Vector3.up * rayHopHight + Vector3.up * rayOffsetDown + Vector3.up * rayHopOffset * i);
+                Debug.DrawRay(rayPosition, transform.forward, Color.green);
+
+                if (Physics.Raycast(rayPosition, transform.forward, out rayLedgeForwardHit, rayHopLength, ledgeLayer, QueryTriggerInteraction.Ignore))
+                {
+                    Debug.DrawRay(rayLedgeForwardHit.point + Vector3.up * 0.2f, Vector3.down, Color.green);
+
+                    if (Physics.Raycast(rayLedgeForwardHit.point + Vector3.up * 0.2f, Vector3.down, out hopLedgeDownHit, 1f, ledgeLayer))
+                    {
+                        if (Input.GetKeyDown(KeyCode.C))
+                        {
+                            HopUp();
+                        }
+                    }
+
+                    break;
+                }
+            }
+        }
+
+        private void HopDownRayCheck()
+        {
+            for (int i = 0; i < rayAmount; i++)
+            {
+                Vector3 rayPosition = transform.position + (Vector3.up * rayHopHight - Vector3.up * rayOffsetDown - Vector3.up * rayHopOffset * i);
+                Debug.DrawRay(rayPosition, transform.forward, Color.green);
+
+                if (Physics.Raycast(rayPosition, transform.forward, out rayLedgeForwardHit, rayHopLength, ledgeLayer, QueryTriggerInteraction.Ignore))
+                {
+                    Debug.DrawRay(rayLedgeForwardHit.point + Vector3.up * 0.2f, Vector3.down, Color.green);
+
+                    if (Physics.Raycast(rayLedgeForwardHit.point + Vector3.up * 0.2f, Vector3.down, out hopLedgeDownHit, 1f, ledgeLayer))
+                    {
+                        if (Input.GetKeyDown(KeyCode.C))
+                        {
+                            HopDown();
+                        }
+                    }
+                    
+                    break;
+                }
             }
         }
 
         void GrabLedge() { 
             isClimbing = true;
-            _climbingGrabManager.hasMatchedTarget = false;
             clambPlayerState = ClambPlayerState.Clambing;
-            playerController.animatior.CrossFade("Idle To Braced Hang", 0.08f);
+            playerController.animatior.CrossFade("Idle To Braced Hang", 0f);
         } 
 
-        async void ThrowLedge() { 
-            isClimbing = false;
-            _climbingGrabManager.hasMatchedTarget = false;
-            playerController.animatior.CrossFade("Braced Hang Drop Ground", 0.1f);
+        public void GrabLedgeTarget()
+        {
+            Vector3 handPos = rayLedgeDownHit.point + transform.forward * rayZHandCorrection + transform.up * rayYHandCorrection;
+            playerController.animatior.MatchTarget(handPos, transform.rotation, AvatarTarget.RightHand, new MatchTargetWeightMask(new Vector3(0, 1, 1), 0), 0.33f, 0.45f);
+        }
 
-            await UniTask.Delay(500);
+        public void ThrowLedge() { 
             clambPlayerState = ClambPlayerState.Normal;
+            playerController.animatior.CrossFade("Braced Hang Drop Ground", 0.05f);
+        }
+
+        public void ThrowLedgeTarget()
+        {
+            UniTask.Delay(200);
+
+            playerController.animatior.CrossFade("Idle_Move", 0.1f);
+            isClimbing = false;
         }
 
         public void HopUp()
@@ -123,11 +251,11 @@ namespace Platformer
             playerController.animatior.CrossFade("Braced Hang Drop", 0.2f);
         }
 
-        // void OnDrawGizmos() {
-        //     if (_climbingGrabManager.rayLedgeDownHit.point != Vector3.zero) {
-        //         Gizmos.color = Color.yellow;
-        //         Gizmos.DrawSphere(_climbingGrabManager.rayLedgeDownHit.point, 0.05f);
-        //     }
-        // }
+        void OnDrawGizmos() {
+            if (hopLedgeDownHit.point != Vector3.zero) {
+                Gizmos.color = Color.yellow;
+                Gizmos.DrawSphere(hopLedgeDownHit.point, 0.05f);
+            }
+        }
     }
 }
