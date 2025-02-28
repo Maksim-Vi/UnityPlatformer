@@ -6262,8 +6262,8 @@ MonoBehaviour:
   rayHopOffset: 0.1
   rayHopHight: 0.98
   rayOffsetDown: 0.3
-  frowardHopPos: -0.11
-  upHopPos: -0.08
+  frowardHopPos: -0.03
+  upHopPos: 0
 --- !u!54 &2265346541053157065
 Rigidbody:
   m_ObjectHideFlags: 0

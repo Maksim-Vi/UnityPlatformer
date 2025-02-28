@@ -64,11 +64,26 @@ namespace Platformer
 
         private void Update() {
             CheckingRay();
-            MathTargetToLedge();
             StateConditionCheck();
 
             HopUpDown();
             CheckOnGroundRay();
+        }
+
+        RaycastHit hopLedgeDownHit;
+        private void HopUpDown()
+        {
+            if(isClimbing)
+            {
+                if (verticalInp.y < -0.1f)
+                {
+                    HopDownRayCheck();
+                }
+                else if (verticalInp.y > 0.1f)
+                {
+                    HopUpRayCheck();
+                }
+            }
         }
 
         private void CheckingRay() {
@@ -105,31 +120,6 @@ namespace Platformer
 
         public RaycastHit rayLedgeForwardHit;
         public RaycastHit rayLedgeDownHit;
-
-        private void MathTargetToLedge() {
-            AnimatorStateInfo animState = playerController.animatior.GetCurrentAnimatorStateInfo(0);
-        
-            bool isCorrectState1 = animState.IsName("Braced Hang Hop Up") && !playerController.animatior.IsInTransition(0);
-            if (isCorrectState1)
-            {
-                // Vector3 handDropPos = hopLedgeDownHit.point + (transform.forward * rayZHandCorrection + transform.up * rayYHandCorrection);
-                //Vector3 handDropPos = hopLedgeDownHit.point + transform.forward * frowardHopPos + transform.up * upHopPos;
-                Vector3 handDropPos = hopLedgeDownHit.point;
-                Debug.Log("hopLedgeDownHit position" + handDropPos);
-                playerController.animatior.MatchTarget(handDropPos, transform.rotation, AvatarTarget.RightHand, new MatchTargetWeightMask(new Vector3(0, 1, 1), 0), 0.15f, 0.52f);
-                return;
-            }
-
-            bool isCorrectState2 = animState.IsName("Braced Hang Drop") && !playerController.animatior.IsInTransition(0);
-            if (isCorrectState2)
-            {
-                // Vector3 handDropPos = hopLedgeDownHit.point + (transform.forward * rayZHandCorrection + transform.up * rayYHandCorrection);
-                Vector3 handDropPos = hopLedgeDownHit.point + transform.forward * frowardHopPos + transform.up * upHopPos;
-                playerController.animatior.MatchTarget(handDropPos, transform.rotation, AvatarTarget.RightHand, new MatchTargetWeightMask(new Vector3(0, 1, 1), 0), 0.15f, 0.59f);
-                return;
-            }
-        }
-
         public void CheckOnGroundRay()
         {
             for (int i = 0; i < rayAmount; i++)
@@ -152,22 +142,6 @@ namespace Platformer
             }
         }
 
-        RaycastHit hopLedgeDownHit;
-        private void HopUpDown()
-        {
-            if(isClimbing)
-            {
-                if (verticalInp.y < -0.1f)
-                {
-                    HopDownRayCheck();
-                }
-                else if (verticalInp.y > 0.1f)
-                {
-                    HopUpRayCheck();
-                }
-            }
-        }
-
         private void HopUpRayCheck()
         {
             for (int i = 0; i < rayAmount; i++)
@@ -177,9 +151,9 @@ namespace Platformer
 
                 if (Physics.Raycast(rayPosition, transform.forward, out rayLedgeForwardHit, rayHopLength, ledgeLayer, QueryTriggerInteraction.Ignore))
                 {
-                    Debug.DrawRay(rayLedgeForwardHit.point + Vector3.up * 0.2f, Vector3.down, Color.green);
+                    Debug.DrawRay(rayLedgeForwardHit.point + Vector3.up * 0.5f, Vector3.down, Color.green);
 
-                    if (Physics.Raycast(rayLedgeForwardHit.point + Vector3.up * 0.2f, Vector3.down, out hopLedgeDownHit, 1f, ledgeLayer))
+                    if (Physics.Raycast(rayLedgeForwardHit.point + Vector3.up * 0.5f, Vector3.down, out hopLedgeDownHit, 1f, ledgeLayer))
                     {
                         if (Input.GetKeyDown(KeyCode.C))
                         {
@@ -201,9 +175,9 @@ namespace Platformer
 
                 if (Physics.Raycast(rayPosition, transform.forward, out rayLedgeForwardHit, rayHopLength, ledgeLayer, QueryTriggerInteraction.Ignore))
                 {
-                    Debug.DrawRay(rayLedgeForwardHit.point + Vector3.up * 0.2f, Vector3.down, Color.green);
+                    Debug.DrawRay(rayLedgeForwardHit.point + Vector3.up * 0.5f, Vector3.down, Color.green);
 
-                    if (Physics.Raycast(rayLedgeForwardHit.point + Vector3.up * 0.2f, Vector3.down, out hopLedgeDownHit, 1f, ledgeLayer))
+                    if (Physics.Raycast(rayLedgeForwardHit.point + Vector3.up * 0.5f, Vector3.down, out hopLedgeDownHit, 1f, ledgeLayer))
                     {
                         if (Input.GetKeyDown(KeyCode.C))
                         {
@@ -223,7 +197,7 @@ namespace Platformer
         } 
 
         public void GrabLedgeTarget()
-        {
+        { 
             Vector3 handPos = rayLedgeDownHit.point + transform.forward * rayZHandCorrection + transform.up * rayYHandCorrection;
             playerController.animatior.MatchTarget(handPos, transform.rotation, AvatarTarget.RightHand, new MatchTargetWeightMask(new Vector3(0, 1, 1), 0), 0.33f, 0.45f);
         }
@@ -233,9 +207,9 @@ namespace Platformer
             playerController.animatior.CrossFade("Braced Hang Drop Ground", 0.05f);
         }
 
-        public void ThrowLedgeTarget()
+        public async void ThrowLedgeTarget()
         {
-            UniTask.Delay(200);
+            await UniTask.Delay(200);
 
             playerController.animatior.CrossFade("Idle_Move", 0.1f);
             isClimbing = false;
@@ -246,9 +220,21 @@ namespace Platformer
             playerController.animatior.CrossFade("Braced Hang Hop Up", 0.2f);
         }
 
+        public void HopUpTarget()
+        {
+            Vector3 handDropPos = hopLedgeDownHit.point + transform.forward * frowardHopPos + transform.up * upHopPos;
+            playerController.animatior.MatchTarget(handDropPos, transform.rotation, AvatarTarget.RightHand, new MatchTargetWeightMask(new Vector3(0, 1, 1), 0), 0.40f, 0.60f);
+        }
+
         public void HopDown()
         {
             playerController.animatior.CrossFade("Braced Hang Drop", 0.2f);
+        }
+
+        public void HopDownTarget()
+        {
+            Vector3 handDropPos = hopLedgeDownHit.point + transform.forward * frowardHopPos + transform.up * upHopPos;
+            playerController.animatior.MatchTarget(handDropPos, transform.rotation, AvatarTarget.RightHand, new MatchTargetWeightMask(new Vector3(0, 1, 1), 0), 0.25f, 0.40f);
         }
 
         void OnDrawGizmos() {
